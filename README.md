@@ -1,6 +1,9 @@
 ## claude4memos
 Memos に特定のタグを含むメモを投稿すると、Claude が自動でコメントを返します。
 
+docker compose を使ってWebhookサーバーとMemosを両立させています。既存のMemosイメージは消してください。
+
+
 ## 対応タグ
 
 | タグ | 動作 |
