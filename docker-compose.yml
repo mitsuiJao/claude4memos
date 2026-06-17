@@ -12,9 +12,9 @@ services:
       - memos-net
     restart: unless-stopped
 
-  memos-claude:
-    image: ghcr.io/mitsuijao/memos2claude:latest
-    container_name: memos-claude
+  claude4memos:
+    image: ghcr.io/mitsuijao/claude4memos:latest
+    container_name: claude4memos
     ports:
       - "3000:3000"
     env_file: .env
