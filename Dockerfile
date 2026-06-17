@@ -2,10 +2,8 @@ FROM node:24-alpine
 
 WORKDIR /app
 
-RUN npm install -g pnpm@11.1.1
-
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install
+COPY package.json package-lock.json ./
+RUN npm ci
 
 COPY . .
 
