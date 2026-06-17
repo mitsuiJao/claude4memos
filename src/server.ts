@@ -27,6 +27,7 @@ async function handleWebhook(body: unknown): Promise<void> {
   const memoName = memo.name as string | undefined;
   const content = memo.content as string | undefined;
   const creatorId = memo.creatorId as number | undefined;
+  const visibility = memo.visibility as number | undefined;
   const tags = (memo.tags as string[] | undefined) ?? [];
 
   if (!memoName || !content || creatorId == null) return;
@@ -38,20 +39,22 @@ async function handleWebhook(body: unknown): Promise<void> {
   if (!result.allowed) {
     await postComment(
       memoName,
-      `レート制限中です。あと ${result.waitSeconds} 秒後に再試行してください。(#${tag})`
+      `レート制限中です。あと ${result.waitSeconds} 秒後に再試行してください。(#${tag})`,
+      visibility
     );
     return;
   }
 
   try {
     const response = await callClaude(tag, content);
-    await postComment(memoName, response);
+    await postComment(memoName, response, visibility);
   } catch (err) {
     console.error('Error processing webhook:', err);
     try {
       await postComment(
         memoName,
-        `エラーが発生しました: ${err instanceof Error ? err.message : String(err)}`
+        `エラーが発生しました: ${err instanceof Error ? err.message : String(err)}`,
+        visibility
       );
     } catch (postErr) {
       console.error('Failed to post error comment:', postErr);

@@ -1,0 +1,32 @@
+services:
+  memos:
+    image: neosmemo/memos:stable
+    container_name: memos
+    ports:
+      - "5230:5230"
+    volumes:
+      - ~/.memos:/var/opt/memos
+    networks:
+      - memos-net
+    restart: unless-stopped
+
+  memos-claude:
+    image: ghcr.io/mitsuijao/memos_claude:latest
+    container_name: memos-claude
+    ports:
+      - "3000:3000"
+    env_file: .env
+    environment:
+      MEMOS_HOST: http://memos:5230
+      MEMOS_ALLOW_PRIVATE_WEBHOOKS: true
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - memos
+    networks:
+      - memos-net
+    restart: unless-stopped
+
+networks:
+  memos-net:
+    driver: bridge
