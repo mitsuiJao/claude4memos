@@ -4,6 +4,7 @@ import { checkAndUpdate } from './db.js';
 import { postComment } from './memos_api.js';
 
 const VALID_TAGS = Object.keys(SYSTEMPROMPT) as Tag[];
+const BOT_CREATOR_ID = process.env.BOT_CREATOR_ID ? Number(process.env.BOT_CREATOR_ID) : null;
 
 const app = express();
 app.use(express.json());
@@ -45,6 +46,11 @@ async function handleWebhook(body: unknown): Promise<void> {
 
   if (!memoName || !content || creatorId == null) {
     console.log('[webhook] missing required fields, skipping');
+    return;
+  }
+
+  if (BOT_CREATOR_ID !== null && creatorId === BOT_CREATOR_ID) {
+    console.log('[webhook] skipping: created by bot itself');
     return;
   }
 
