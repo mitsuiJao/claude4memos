@@ -25,6 +25,19 @@ export async function callClaude(tag: string, content: string): Promise<string> 
     max_tokens: 16384,
     system: systemPrompt,
     messages: [{ role: 'user', content }],
+	tools: [
+      {
+        type: "web_search_20250305",
+        name: "web_search",
+        max_uses: 5,
+      },
+      {
+        type: "web_fetch_20250910",
+        name: "web_fetch",
+        max_uses: 3,
+        citations: { enabled: true },
+      }
+    ],
   });
   const block = message.content[0];
   if (block.type !== 'text') throw new Error('Unexpected response type');
